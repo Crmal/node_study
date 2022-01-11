@@ -29,5 +29,5 @@ rl.question("지뢰밭의 가로 길이를 입력해주세요. ", w => {
 
 rl.on("close", function () {
   const field = createMineField(fieldInfo);
-  console.log(field);
+  // console.log(field);
 });
