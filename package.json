@@ -2,5 +2,10 @@
   "name": "minesweeper",
   "version": "1.0.0",
   "main": "src/index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "sequelize": "^6.14.1",
+    "sequelize-cli": "^6.4.1",
+    "sqlite3": "^5.0.2"
+  }
 }

@@ -1,45 +1,43 @@
-var express = require('express');
-var router = express.Router();
-var posts = require('../model/posts');
-var lodash = require('lodash');
+import { Router } from 'express';
 
+import content from '../models/content';
+
+var router = Router();
 var nextId = 4;
 
-router.get('/posts', (req, res, next) => {
-  res.json({
-    "data": posts
-    })
+router.get('/posts', async (req, res) => {
+  res.json({ data: await content.findAll({})});
 });
 
 router.get('/posts/:id', (req, res, next) => {
-  if(!posts.find(post => post.id === +req.params.id)){
+  if(!find(post => post.id === +req.params.id)){
     return res.json({
       error: "Post not exist"
     });
   }
   res.json({
-    "data": posts.find(post => post.id === +req.params.id)
+    "data": find(post => post.id === +req.params.id)
   });
 });
 
 router.post('/posts', (req, res, next) => {
   var user_id = req.get('X-User-Id');
-  posts.push({
+  push({
     id: nextId++,
-    content: req.body.content,
+    content: req.body.content,  
     winter: user_id
   });
 
   res.json({
     "data":{
-      "id": posts.find(post => post.id === nextId - 1).id
+      "id": find(post => post.id === nextId - 1).id
     }
   });
 });
 
 router.put('/posts/:postId', (req, res, next) => {
   var user_id = req.get("X-User-Id");
-  var index = posts.findIndex(post => post.id === +req.params.postId);
+  var index = findIndex(post => post.id === +req.params.postId);
   if (index === -1) 
     return res.json({
       error: "Cannot modify post",
@@ -56,7 +54,7 @@ router.put('/posts/:postId', (req, res, next) => {
 
 router.delete('/posts/:postId', (req, res, next) => {
   var user_id = req.get("X-User-Id");
-  var index = posts.find(post => post.id === +req.params.postId);
+  var index = find(post => post.id === +req.params.postId);
   
   if (index.winter === +user_id){
     return res.json({
@@ -69,4 +67,4 @@ router.delete('/posts/:postId', (req, res, next) => {
 });
 
 
-module.exports = router;
+export default router;

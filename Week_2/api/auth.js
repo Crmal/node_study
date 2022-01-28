@@ -1,14 +1,12 @@
 var express = require('express');
 var router = express.Router();
 const User = require('../model');
-var lodash = require('lodash');
-const { values } = require('lodash');
 
 nextId = 4;
 
 router.post('/login', (req, res, next) => {
   var body = req.body;
-  var users = User.data.user.find(user => user.email === body.email);
+  var users = User.find(user => user.email === body.email);
   if(users && users.password === body.password){
     return res.json(
       {
