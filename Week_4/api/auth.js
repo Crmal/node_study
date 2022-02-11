@@ -28,9 +28,17 @@ auth.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const userData = await User.findOne({ where: { email }});
   if(userData && userData.password == password){
+    const token = sign({
+      id: req.body.id,
+      name: req.body.name,
+    }, process.env.JWT_SECRET, {
+      expiresIn: '10m',
+      issuer: 'JWT_study',
+    });
     return res.status(200).json({
       data:{
-        user: userData.id
+        user: userData.id,
+        token,
       }
     });
   }

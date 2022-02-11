@@ -1,13 +1,14 @@
 import { Router } from 'express';
+import { verifyToken } from '../middlewares/verify';
 import Post from '../models/post';
 
 const posts = Router();
 
-posts.get('/', async (req, res) => {
+posts.get('/', verifyToken, async (req, res) => {
   res.status(200).json({ data: await Post.findAll({})});
 });
 
-posts.get('/:id', async (req, res) => {
+posts.get('/:id', verifyToken, async (req, res) => {
   const { id } = req.params;
   if(await Post.findOne({ where: { id }})){
     return res.status(200).json({
@@ -22,8 +23,8 @@ posts.get('/:id', async (req, res) => {
   })
 });
 
-posts.post('/', async (req, res) => {
-  const userId = req.get('X-User-Id');
+posts.post('/', verifyToken, async (req, res) => {
+  const userId = req.header('X-User-Id');
   const post = Post.create({
     content: req.body.content,
     writer: userId,
@@ -35,9 +36,9 @@ posts.post('/', async (req, res) => {
   });
 });
 
-posts.put('/:postId', async (req, res) => {
+posts.put('/:postId', verifyToken, async (req, res) => {
   const { postId } = req.params;
-  const userId = req.get('X-User-Id');
+  const userId = req.header('X-User-Id');
   const userData = await Post.findOne({
     where: { id: postId }
   });
@@ -59,8 +60,8 @@ posts.put('/:postId', async (req, res) => {
   });
 })
 
-posts.delete('/:postId', async (req, res) => {
-  const userId = req.get('X-User-Id');
+posts.delete('/:postId', verifyToken, async (req, res) => {
+  const userId = req.header('X-User-Id');
   const userData = await Post.findOne({
     where: { writer: userId },
   });

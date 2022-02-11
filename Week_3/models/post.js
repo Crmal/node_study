@@ -1,23 +1,23 @@
-const Sequelize = require("sequelize");
+import { Model, DataTypes } from "sequelize";
 
-module.exports = class Content extends Sequelize.Model {
+export default class post extends Model {
   static init(sequelize) {
     return super.init(
       {
         content: {
-          type: Sequelize.STRING(100),
+          type: DataTypes.STRING(100),
           allowNull: false,
         },
         writer: {
-          type: Sequelize.INTEGER,
+          type: DataTypes.INTEGER,
           allowNull: false,
         },
       },
       {
         sequelize,
         timestamps: false,
-        modelName: "Content",
-        tableName: "contents",
+        modelName: "Post",
+        tableName: "post",
         paranoid: false,
         charset: "utf8mb4",
         collate: "utf8mb4_general_ci",
@@ -26,6 +26,6 @@ module.exports = class Content extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.Content.belongsTo(db.User, { foreignKey: "commenter", targetKey: "id" });
+    db.Post.belongsTo(db.User, { foreignKey: "writer", targetKey: "id" });
   }
 };
